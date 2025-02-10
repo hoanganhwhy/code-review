@@ -2,7 +2,8 @@
 package person;
 import java.util.*;
 import java.text.*;
-
+// Tạo scanner chung để tránh rò rỉ bộ nhớ
+// private static final Scanner scanner = new Scanner(System.in);
 public abstract class Person implements IPerson{
     private String id;
     private String name;
