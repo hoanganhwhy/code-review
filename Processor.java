@@ -1,12 +1,12 @@
-
 package person;
 import java.util.*;
 
 public class Processor {
-    public static void main(String args[]){
+    public static void main(String[] args) {
         PersonList personList = new PersonList();
         Scanner scanner = new Scanner(System.in);
-        while(true){
+        int choice = -1;
+        while (choice != 10) {
             System.out.println("=== MENU ===");
             System.out.println("1. Add new Student");
             System.out.println("2. Add new Teacher");
@@ -15,14 +15,18 @@ public class Processor {
             System.out.println("5. Find person with id");
             System.out.println("6. Display all person");
             System.out.println("7. Find top 3 students with the highest GPA");
-            System.out.println("8. Find the teacher with highest income");
-            System.out.println("9. Find student with scholarship");
-            System.out.println("10. Exit program");
+            System.out.println("8. Exit program");
             System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-            
-            switch(choice){
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid choice! Please enter a number.");
+                scanner.nextLine();
+                continue;
+            }
+
+            switch (choice) {
                 case 1:
                     Student student = new Student();
                     student.enterPersonInfo();
@@ -34,61 +38,49 @@ public class Processor {
                     personList.addPerson(teacher);
                     break;
                 case 3:
-                    System.out.println("Enter id want to update: ");
+                    System.out.print("Enter id to update: ");
                     String idToUpdate = scanner.nextLine();
-                    personList.updatePersonById(idToUpdate);
-                    if(personList.updatePersonById(idToUpdate) == true){
-                        System.out.println("Updating person complete");
-                    }else{
-                        System.out.println("ID not found");
+                    Person personToUpdate = personList.findPersonById(idToUpdate);
+                    if (personToUpdate != null) {
+                        personToUpdate.updatePersonById(idToUpdate);
+                        System.out.println("Update completed.");
+                    } else {
+                        System.out.println("Person not found.");
                     }
                     break;
-                case 4: 
-                    System.out.println("Enter id want to delete: ");
+                case 4:
+                    System.out.print("Enter id to delete: ");
                     String idToDelete = scanner.nextLine();
-                    personList.updatePersonById(idToDelete);
-                    if(personList.updatePersonById(idToDelete) == true){
-                        System.out.println("Deleting person complete");
-                    }else{
-                        System.out.println("ID not found");
+                    if (personList.deletePersonById(idToDelete)) {
+                        System.out.println("Delete completed.");
+                    } else {
+                        System.out.println("Person not found.");
                     }
                     break;
-                case 5: 
-                    System.out.println("Enter id want to find: ");
+                case 5:
+                    System.out.print("Enter id to find: ");
                     String idToFind = scanner.nextLine();
-                    if(personList.findPersonById(idToFind) != null){
-                        personList.findPersonById(idToFind).displayDetails();
-                    }else{
-                        System.out.println("Id not found");
+                    Person person = personList.findPersonById(idToFind);
+                    if (person != null) {
+                        person.displayDetails();
+                    } else {
+                        System.out.println("Person not found.");
                     }
                     break;
                 case 6:
-                    personList.displayAll();
-                    break;
-                case 7:
-                    if(personList.findTop3Students()!= null){
-                        personList.findTop3Students().displayDetails();
-                    }else{
-                        System.out.println("Dont have top 3 students");
+                    for (Person p : personList.findTop3Students()) {
+                        p.displayDetails();
                     }
                     break;
                 case 8:
-                    if(personList.findTeacherWithHighestIncome() != null){
-                        personList.findTeacherWithHighestIncome().displayDetails();
-                    }else{
-                        System.out.println("Dont have teacher with highest income");
-                    }
-                    break;
-                case 9:
-                    List<Student> scholarshipStudent = personList.findStudentsWithScholarships();
-                    scholarshipStudent.forEach(Student::displayDetails);
-                    break;
-                case 10:
-                    System.out.println("Exit program !");
+                    System.out.println("Exiting program.");
                     break;
                 default:
-                    System.out.println("Invalida choice, please enter choice again");
+                    System.out.println("Invalid choice, please try again.");
             }
         }
+        scanner.close();
     }
 }
+
+                    
